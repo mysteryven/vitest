@@ -199,10 +199,12 @@ export function resolveConfig(
 
   if (mode !== 'benchmark') {
     // @ts-expect-error from CLI
-    const reporters = resolved.reporter ?? resolved.reporters
-    // eslint-disable-next-line no-console
-    console.log(reporters, '------reporters-------')
-    resolved.reporters = Array.from(new Set(toArray(reporters))).filter(Boolean)
+    const reporter = resolved.reporter
+    resolved.reporters = reporter
+      ? toArray(reporter)
+      : Array.from(new Set(
+        toArray(resolved.reporters)),
+      ).filter(Boolean)
   }
 
   if (!resolved.reporters.length)
