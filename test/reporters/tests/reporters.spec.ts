@@ -11,7 +11,6 @@ import { files } from '../src/data'
 import { createSuiteHavingFailedTestWithXmlInError } from '../src/data-for-junit'
 
 afterEach(() => {
-  // test
   vi.useRealTimers()
 })
 
