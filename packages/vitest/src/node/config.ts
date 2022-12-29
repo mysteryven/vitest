@@ -198,9 +198,11 @@ export function resolveConfig(
     resolved.related = toArray(options.related).map(file => resolve(resolved.root, file))
 
   if (mode !== 'benchmark') {
-    // @ts-expect-error from CLI
-    const reporters = resolved.reporter ?? resolved.reporters
-    resolved.reporters = Array.from(new Set(toArray(reporters))).filter(Boolean)
+    resolved.reporters = Array.from(new Set([
+      ...toArray(resolved.reporters),
+      // @ts-expect-error from CLI
+      ...toArray(resolved.reporter),
+    ])).filter(Boolean)
   }
 
   if (!resolved.reporters.length)

@@ -40,7 +40,7 @@ describe.concurrent('custom reporters', () => {
   if ((process.platform === 'win32' || process.platform === 'darwin') && process.env.CI)
     return test.skip('skip on windows')
 
-  const TIMEOUT = 80_000
+  const TIMEOUT = 60_000
 
   test('custom reporter instances defined in configuration works', async () => {
     const stdout = await runWithRetry('--config', 'custom-reporter.vitest.config.ts')
