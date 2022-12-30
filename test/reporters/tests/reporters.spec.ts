@@ -360,7 +360,7 @@ test.skipIf(skip)('Cli can overrides reporters by --reporter', async () => {
   expect(() => {
     JSON.parse(stdout)
   }).not.toThrowError()
-}, 60000)
+}, 8_0000)
 
 /**
  * Ensure environment and OS specific paths are consistent in snapshots
