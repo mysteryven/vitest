@@ -1,8 +1,7 @@
 import { existsSync, readFileSync, rmSync } from 'fs'
-import { afterEach, expect, it, test, vi } from 'vitest'
+import { afterEach, expect, test, vi } from 'vitest'
 import { normalize, resolve } from 'pathe'
 import { execa } from 'execa'
-import { describe } from 'node:test'
 import { JsonReporter } from '../../../packages/vitest/src/node/reporters/json'
 import { JUnitReporter } from '../../../packages/vitest/src/node/reporters/junit'
 import { TapReporter } from '../../../packages/vitest/src/node/reporters/tap'
@@ -361,7 +360,7 @@ test.skipIf(skip)('Cli can overrides reporters by --reporter', async () => {
   expect(() => {
     JSON.parse(stdout)
   }).not.toThrowError()
-}, 40000)
+}, 60000)
 
 /**
  * Ensure environment and OS specific paths are consistent in snapshots
