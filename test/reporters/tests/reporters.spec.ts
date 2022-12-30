@@ -344,23 +344,23 @@ test('json reporter with outputFile object in non-existing directory', async () 
   rmSync(rootDirectory, { recursive: true })
 })
 
-const skip = (process.platform === 'win32' || process.platform === 'darwin') && process.env.CI
-test.skipIf(skip)('Cli can overrides reporters by --reporter', async () => {
-  const root = resolve(__dirname, '../fixtures')
-  const { stdout } = await execa('npx', ['vitest', 'run', 'all-passing.test.ts', '--reporter=json'], {
-    cwd: root,
-    env: {
-      ...process.env,
-      CI: 'true',
-      NO_COLOR: 'true',
-    },
-    stdio: 'pipe',
-  }).catch(e => e)
+// const skip = (process.platform === 'win32' || process.platform === 'darwin') && process.env.CI
+// test.skipIf(skip)('Cli can overrides reporters by --reporter', async () => {
+//   const root = resolve(__dirname, '../fixtures')
+//   const { stdout } = await execa('npx', ['vitest', 'run', 'all-passing.test.ts', '--reporter=json'], {
+//     cwd: root,
+//     env: {
+//       ...process.env,
+//       CI: 'true',
+//       NO_COLOR: 'true',
+//     },
+//     stdio: 'pipe',
+//   }).catch(e => e)
 
-  expect(() => {
-    JSON.parse(stdout)
-  }).not.toThrowError()
-})
+//   expect(() => {
+//     JSON.parse(stdout)
+//   }).not.toThrowError()
+// })
 
 /**
  * Ensure environment and OS specific paths are consistent in snapshots
