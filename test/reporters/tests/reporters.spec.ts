@@ -1,7 +1,7 @@
 import { existsSync, readFileSync, rmSync } from 'fs'
 import { afterEach, expect, test, vi } from 'vitest'
 import { normalize, resolve } from 'pathe'
-import { execa } from 'execa'
+// import { execa } from 'execa'
 import { JsonReporter } from '../../../packages/vitest/src/node/reporters/json'
 import { JUnitReporter } from '../../../packages/vitest/src/node/reporters/junit'
 import { TapReporter } from '../../../packages/vitest/src/node/reporters/tap'
@@ -344,23 +344,23 @@ test('json reporter with outputFile object in non-existing directory', async () 
   rmSync(rootDirectory, { recursive: true })
 })
 
-const skip = (process.platform === 'win32' || process.platform === 'darwin') && process.env.CI
+// const skip = (process.platform === 'win32' || process.platform === 'darwin') && process.env.CI
 
-test.skipIf(skip)('Cli can overrides reporters by --reporter', async () => {
-  const { stdout } = await execa('npx', ['vitest', 'run', 'all-passing', '--reporter=json'], {
-    cwd: resolve(__dirname, '../fixtures'),
-    env: {
-      ...process.env,
-      CI: 'true',
-      NO_COLOR: 'true',
-    },
-    stdio: 'pipe',
-  }).catch(e => e)
+// test.skipIf(skip)('Cli can overrides reporters by --reporter', async () => {
+//   const { stdout } = await execa('npx', ['vitest', 'run', 'all-passing', '--reporter=json'], {
+//     cwd: resolve(__dirname, '../fixtures'),
+//     env: {
+//       ...process.env,
+//       CI: 'true',
+//       NO_COLOR: 'true',
+//     },
+//     stdio: 'pipe',
+//   }).catch(e => e)
 
-  expect(() => {
-    JSON.parse(stdout)
-  }).not.toThrowError()
-}, 8_0000)
+//   expect(() => {
+//     JSON.parse(stdout)
+//   }).not.toThrowError()
+// }, 8_0000)
 
 /**
  * Ensure environment and OS specific paths are consistent in snapshots
