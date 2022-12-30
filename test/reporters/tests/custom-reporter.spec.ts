@@ -60,7 +60,7 @@ describe.concurrent('custom reporters', () => {
   test('a path to a custom reporter defined in configuration works', async () => {
     const stdout = await runWithRetry('--config', 'custom-reporter-path.vitest.config.ts', '--reporter', customJSReporterPath)
     expect(stdout).includes('hello from custom reporter')
-  }, TIMEOUT)
+  }, TIMEOUT * 2)
 
   test('custom TS reporters using ESM given as a CLI argument works', async () => {
     const stdout = await runWithRetry('--config', 'without-custom-reporter.vitest.config.ts', '--reporter', customTsReporterPath)
