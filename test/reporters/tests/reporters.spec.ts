@@ -344,23 +344,23 @@ test('json reporter with outputFile object in non-existing directory', async () 
   rmSync(rootDirectory, { recursive: true })
 })
 
-const skip = (process.platform === 'win32' || process.platform === 'darwin') && process.env.CI
+// const skip = (process.platform === 'win32' || process.platform === 'darwin') && process.env.CI
 
-test.skipIf(skip)('Cli can overrides reporters by --reporter', async () => {
-  const { stdout } = await execa('npx', ['vitest', 'run', 'all-passing', '--reporter=json'], {
-    cwd: resolve(__dirname, '../fixtures'),
-    env: {
-      ...process.env,
-      CI: 'true',
-      NO_COLOR: 'true',
-    },
-    stdio: 'pipe',
-  }).catch(e => e)
+// test.skipIf(skip)('Cli can overrides reporters by --reporter', async () => {
+//   const { stdout } = await execa('npx', ['vitest', 'run', 'all-passing', '--reporter=json'], {
+//     cwd: resolve(__dirname, '../fixtures'),
+//     env: {
+//       ...process.env,
+//       CI: 'true',
+//       NO_COLOR: 'true',
+//     },
+//     stdio: 'pipe',
+//   }).catch(e => e)
 
-  expect(() => {
-    JSON.parse(stdout)
-  }).not.toThrowError()
-}, 60000)
+//   expect(() => {
+//     JSON.parse(stdout)
+//   }).not.toThrowError()
+// }, 60000)
 
 /**
  * Ensure environment and OS specific paths are consistent in snapshots
