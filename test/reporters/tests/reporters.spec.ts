@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, rmSync } from 'fs'
 import { afterEach, expect, test, vi } from 'vitest'
 import { normalize, resolve } from 'pathe'
+// import { execa } from 'execa'
 import { JsonReporter } from '../../../packages/vitest/src/node/reporters/json'
 import { JUnitReporter } from '../../../packages/vitest/src/node/reporters/junit'
 import { TapReporter } from '../../../packages/vitest/src/node/reporters/tap'
@@ -11,6 +12,7 @@ import { createSuiteHavingFailedTestWithXmlInError } from '../src/data-for-junit
 
 afterEach(() => {
   vi.useRealTimers()
+  // test
 })
 
 test('tap reporter', async () => {
