@@ -80,6 +80,7 @@ describe.concurrent('custom reporters', () => {
         CI: 'true',
         NO_COLOR: 'true',
       },
+      stdio: 'pipe',
       windowsHide: false,
     }).catch(e => e)
 
