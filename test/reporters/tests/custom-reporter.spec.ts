@@ -71,4 +71,20 @@ describe.concurrent('custom reporters', () => {
     const stdout = await runWithRetry('--config', 'without-custom-reporter.vitest.config.ts', '--reporter', customJSReporterPath)
     expect(stdout).includes('hello from custom reporter')
   }, TIMEOUT)
+
+  test('Cli can overrides reporters by --reporter', async () => {
+    const { stdout } = await execa('npx', ['vitest', 'run', 'all-passing', '--reporter=json'], {
+      cwd: resolve(__dirname, '../fixtures'),
+      env: {
+        ...process.env,
+        CI: 'true',
+        NO_COLOR: 'true',
+      },
+      windowsHide: false,
+    }).catch(e => e)
+
+    expect(() => {
+      JSON.parse(stdout)
+    }).not.toThrowError()
+  }, 8_0000)
 })
