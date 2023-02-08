@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { assertTypes, deepClone, objectAttr, toArray } from '@vitest/utils'
+import { assertTypes, deepClone, isPromise, objectAttr, toArray } from '@vitest/utils'
 import { deepMerge, resetModules } from '../../../packages/vitest/src/utils'
 import { deepMergeSnapshot } from '../../../packages/vitest/src/integrations/snapshot/port/utils'
 import type { ModuleCacheMap } from '../../../packages/vite-node/src/types'
@@ -206,5 +206,31 @@ describe('objectAttr', () => {
     ${{ func }}                   | ${'func'}       | ${func}
   `('objectAttr($value, $path) -> $expected', ({ value, path, expected }) => {
     expect(objectAttr(value, path)).toEqual(expected)
+  })
+})
+
+describe('isPromise', () => {
+  test.each`
+  value  
+  ${undefined} 
+  ${null} 
+  ${123} 
+  ${'456'} 
+  ${true} 
+  ${Symbol('')} 
+  ${[]} 
+  ${{}} 
+  `(
+    'returns false if value is $value',
+    (value) => {
+      expect(isPromise(value)).toBe(false)
+    },
+  )
+  test('a resolved Promise', () => {
+    expect(isPromise(Promise.resolve(42))).toBe(true)
+  })
+
+  test('a rejected Promise', () => {
+    expect(isPromise(Promise.reject(new Error('error')).catch(() => {}))).toBe(true)
   })
 })

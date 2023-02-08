@@ -253,7 +253,10 @@ function enhanceSpy<TArgs extends any[], TReturns>(
 
   function withImplementation(fn: (...args: TArgs) => TReturns, callback: () => Promise<unknown>): Promise<EnhancedSpy<TArgs, TReturns>>
   function withImplementation(fn: (...args: TArgs) => TReturns, callback: () => void): EnhancedSpy<TArgs, TReturns>
-  function withImplementation(fn: (...args: TArgs) => TReturns, callback: () => void): Promise<EnhancedSpy<TArgs, TReturns>> | EnhancedSpy<TArgs, TReturns> {
+  function withImplementation(
+    fn: (...args: TArgs) => TReturns,
+    callback: (() => void) | (() => Promise<unknown>),
+  ): Promise<EnhancedSpy<TArgs, TReturns>> | EnhancedSpy<TArgs, TReturns> {
     const prevImplementation = implementation
     const prevOnceImplementations = onceImplementations
     const undoStash = () => {

@@ -27,7 +27,7 @@ export function isObject(item: unknown): boolean {
 
 export function isPromise<T = unknown>(
   item: unknown,
-): item is Promise<T> {
+): item is PromiseLike<T> {
   return (
     item != null
     && (typeof item === 'object' || typeof item === 'function')
