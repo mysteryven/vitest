@@ -1,3 +1,4 @@
+import { isPromise } from '@vitest/utils'
 import type { SpyImpl } from 'tinyspy'
 import * as tinyspy from 'tinyspy'
 
@@ -46,6 +47,8 @@ export interface SpyInstance<TArgs extends any[] = any[], TReturns = any> {
   getMockImplementation(): ((...args: TArgs) => TReturns) | undefined
   mockImplementation(fn: ((...args: TArgs) => TReturns) | (() => Promise<TReturns>)): this
   mockImplementationOnce(fn: ((...args: TArgs) => TReturns) | (() => Promise<TReturns>)): this
+  withImplementation(fn: ((...args: TArgs) => TReturns) | (() => Promise<TReturns>), callback: () => Promise<unknown>): Promise<this>
+  withImplementation(fn: ((...args: TArgs) => TReturns) | (() => Promise<TReturns>), callback: () => void): this
   mockReturnThis(): this
   mockReturnValue(obj: TReturns): this
   mockReturnValueOnce(obj: TReturns): this
@@ -247,6 +250,33 @@ function enhanceSpy<TArgs extends any[], TReturns>(
     onceImplementations.push(fn)
     return stub
   }
+
+  function withImplementation(fn: (...args: TArgs) => TReturns, callback: () => Promise<unknown>): Promise<EnhancedSpy<TArgs, TReturns>>
+  function withImplementation(fn: (...args: TArgs) => TReturns, callback: () => void): EnhancedSpy<TArgs, TReturns>
+  function withImplementation(fn: (...args: TArgs) => TReturns, callback: () => void): Promise<EnhancedSpy<TArgs, TReturns>> | EnhancedSpy<TArgs, TReturns> {
+    const prevImplementation = implementation
+    const prevOnceImplementations = onceImplementations
+    const undoStash = () => {
+      implementation = prevImplementation
+      onceImplementations = prevOnceImplementations
+    }
+    onceImplementations = []
+    implementation = fn
+
+    const returnedValue = callback()
+
+    if (isPromise(returnedValue)) {
+      return returnedValue.then(() => {
+        undoStash()
+        return stub
+      })
+    }
+
+    undoStash()
+    return stub
+  }
+
+  stub.withImplementation = withImplementation
 
   stub.mockReturnThis = () =>
     stub.mockImplementation(function (this: TReturns) {

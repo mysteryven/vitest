@@ -25,6 +25,16 @@ export function isObject(item: unknown): boolean {
   return item != null && typeof item === 'object' && !Array.isArray(item)
 }
 
+export function isPromise<T = unknown>(
+  item: unknown,
+): item is Promise<T> {
+  return (
+    item != null
+    && (typeof item === 'object' || typeof item === 'function')
+    && typeof (item as any).then === 'function'
+  )
+}
+
 function isFinalObj(obj: any) {
   return obj === Object.prototype || obj === Function.prototype || obj === RegExp.prototype
 }
