@@ -29,6 +29,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@vitest/utils": "workspace:*",
     "tinyspy": "^1.0.2"
   }
 }

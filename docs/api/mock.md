@@ -90,6 +90,57 @@ You should use spy assertions (e.g., [`toHaveBeenCalled`](/api/expect#tohavebeen
   // 'first call', 'second call', 'default', 'default'
   console.log(myMockFn(), myMockFn(), myMockFn(), myMockFn())
   ```
+## withImplementation
+
+- **Type:** `(fn: Function, callback: () => void) => MockInstance`
+- **Type:** `(fn: Function, callback: () => Promise<unknown>) => Promise<MockInstance>`
+
+Accepts a function which should be temporarily used as the implementation of the mock while the callback is being executed.
+
+  ```ts
+  const myMockFn = vi.fn(() => 'default')
+  
+  myMockFn.withImplementation(() => 'first call', () => {
+    myMockFn() // 'first call'
+  })
+
+  myMockFn() // 'default'
+```
+
+`myMockFn.withImplementation` can be used regardless of whether or not the callback is asynchronous. If the callback is asynchronous a promise will be returned. Awaiting the promise will await the callback and reset the implementation.
+
+  ```ts
+  test('async callback', () => {
+    const myMockFn = vi.fn(() => 'default')
+  
+    // We await this call since the callback is async
+    await myMockFn.withImplementation(
+      () => 'first call',
+      async () => {
+        myMockFn() // 'first call'
+      },
+    )
+  
+    myMockFn() // 'default'
+  })
+  ```
+
+  And it takes precedence over the [`mockImplementationOnce`](https://vitest.dev/api/mock.html#mockimplementationonce).
+
+  ```ts
+  const myMockFn = vi.fn(() => 'default')
+
+  myMockFn.mockImplementationOnce(() => 'first call')
+  myMockFn.withImplementation(
+    () => 'second call',
+    () => {
+      myMockFn() // 'second call'
+    },
+  )
+
+  myMockFn() // 'first call'
+  myMockFn() // 'default'
+  ```
 
 ## mockRejectedValue
 

@@ -3,7 +3,7 @@
  */
 
 import type { MockedFunction, MockedObject } from 'vitest'
-import { describe, expect, test, vi } from 'vitest'
+import { describe, expect, it, test, vi } from 'vitest'
 import { getWorkerState } from 'vitest/src/utils'
 
 const expectType = <T>(obj: T) => obj
@@ -87,5 +87,77 @@ describe('testing vi utils', () => {
 
     expect(mod).toBeDefined()
     expect(mod.timeout).toBe(100)
+  })
+
+  describe('withImplementation', () => {
+    it('sets an implementation which is available within the synchronous callback', () => {
+      const mock1 = vi.fn()
+      const mock2 = vi.fn()
+
+      const Module = vi.fn(() => ({ someFn: mock1 }))
+      const testFn = function () {
+        const m = new Module()
+        m.someFn()
+      }
+
+      Module.withImplementation(
+        () => ({ someFn: mock2 }),
+        () => {
+          testFn()
+          expect(mock2).toHaveBeenCalled()
+          expect(mock1).not.toHaveBeenCalled()
+        },
+      )
+
+      testFn()
+      expect(mock1).toHaveBeenCalled()
+
+      expect.assertions(3)
+    })
+
+    it('sets an implementation which is available within the asynchronous callback ', async () => {
+      const mock1 = vi.fn()
+      const mock2 = vi.fn()
+
+      const Module = vi.fn(() => ({ someFn: mock1 }))
+      const testFn = function () {
+        const m = new Module()
+        m.someFn()
+      }
+
+      await Module.withImplementation(
+        () => ({ someFn: mock2 }),
+        async () => {
+          testFn()
+          expect(mock2).toHaveBeenCalled()
+          expect(mock1).not.toHaveBeenCalled()
+        },
+      )
+
+      testFn()
+      expect(mock1).toHaveBeenCalled()
+
+      expect.assertions(3)
+    })
+
+    it('has a higher priority than `vi.mockImplementationOnce`', () => {
+      const mockFn = vi.fn(() => 'primary').mockImplementationOnce(() => 'once')
+      mockFn.withImplementation(() => 'withImplementation', () => {
+        expect(mockFn()).toBe('withImplementation')
+      })
+
+      expect(mockFn()).toBe('once')
+      expect(mockFn()).toBe('primary')
+    })
+
+    it('returns `MockedFunction` if callback is synchronous', () => {
+      const mockFn = vi.fn(() => true).withImplementation(() => true, () => {})
+      expectType<MockedFunction<() => boolean>>(mockFn)
+    })
+
+    it('returns a Promise if callback is asynchronous', () => {
+      const mockFn = vi.fn(() => true).withImplementation(() => true, async () => {})
+      expectType<Promise<MockedFunction<() => boolean>>>(mockFn)
+    })
   })
 })
