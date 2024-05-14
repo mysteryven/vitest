@@ -532,7 +532,7 @@ Silent console output from tests
 
 - **Type:** `string | string[]`
 
-Path to setup files. They will be run before each test file.
+Path to setup files. They will be run before each test file. And they will be merged into [`forceRerunTriggers`](https://vitest.dev/config/#forcereruntriggers), all your tests will be rerun when setup files are changed.
 
 :::info
 Changing setup files will trigger rerun of all tests.

@@ -195,6 +195,11 @@ export function resolveConfig(
     ...resolved.setupFiles,
   ]
 
+  resolved.forceRerunTriggers = [
+    ...resolved.forceRerunTriggers,
+    ...resolved.setupFiles,
+  ]
+
   // the server has been created, we don't need to override vite.server options
   resolved.api = resolveApiConfig(options)
 
